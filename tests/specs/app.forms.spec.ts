@@ -1,3 +1,7 @@
+import { By, Enter, PageElement } from '@serenity-js/web';
+
+require('expect-webdriverio')
+import { actorCalled } from '@serenity-js/core';
 import Gestures from '../helpers/Gestures';
 import TabBar from '../screenobjects/components/TabBar';
 import FormScreen from '../screenobjects/FormsScreen';
@@ -6,6 +10,7 @@ import NativeAlert from '../screenobjects/components/NativeAlert';
 
 describe('WebdriverIO and Appium, when interacting with form elements,', () => {
     beforeEach(async () => {
+        console.log('>> Actor:', actorCalled('Heidi').name, (actorCalled('Heidi') as any).abilities)
         await TabBar.waitForTabBarShown();
         await TabBar.openForms();
         await FormScreen.waitForIsShown(true);
@@ -13,7 +18,12 @@ describe('WebdriverIO and Appium, when interacting with form elements,', () => {
 
     it('should be able type in the input and validate the text', async () => {
         const text = 'Hello, this is a demo app';
-        await FormScreen.input.setValue(text);
+
+        await actorCalled('Heidi').attemptsTo(
+            Enter.theValue(text).into(PageElement.located(By.css('~text-input')))
+        )
+
+        // await FormScreen.input.setValue(text);
         await expect(FormScreen.inputTextResult).toHaveTextContaining(text);
 
         /**

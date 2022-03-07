@@ -1,9 +1,14 @@
+import { ConsoleReporter } from '@serenity-js/console-reporter';
+import { ArtifactArchiver } from '@serenity-js/core';
+import { WebdriverIOConfig } from '@serenity-js/webdriverio';
+import { Actors } from './screenplay';
+
 /**
  * All not needed configurations, for this boilerplate, are removed.
  * If you want to know which configuration options you have then you can
  * check https://webdriver.io/docs/configurationfile
  */
-export const config: WebdriverIO.Config = {
+export const config: WebdriverIOConfig  = {
     //
     // ====================
     // Runner Configuration
@@ -46,7 +51,7 @@ export const config: WebdriverIO.Config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'silent',
+    logLevel: 'debug',
     // Set specific log levels per logger
     // loggers:
     // - webdriver, webdriverio
@@ -97,7 +102,23 @@ export const config: WebdriverIO.Config = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'mocha',
+    // framework: 'mocha',
+    framework: '@serenity-js/webdriverio',
+
+
+    serenity: {
+        actors: new Actors(),
+        crew: [
+            ArtifactArchiver.storingArtifactsAt('./target/site/serenity'),
+            // Photographer.whoWill(TakePhotosOfInteractions),     // slower execution, more comprehensive reports
+            // Photographer.whoWill(TakePhotosOfFailures),      // fast execution, screenshots only when tests fail
+            ConsoleReporter.forDarkTerminals(),
+            // new SerenityBDDReporter(),
+        ]
+    },
+
+
+
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
     //
